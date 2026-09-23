@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Check public file list
+        run: python scripts/check_public_files.py
+      - name: Test Python controller
+        run: python -m unittest discover -s outputs/hybrid -p "test_*.py" -q
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore WinUI project
+        run: dotnet restore outputs/SpirePilot/SpirePilot.csproj --configfile outputs/SpirePilot/NuGet.Config
+      - name: Build WinUI project
+        run: dotnet build outputs/SpirePilot/SpirePilot.csproj -c Release --no-restore

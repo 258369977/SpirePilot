@@ -1,0 +1,49 @@
+# Local dependency and build caches
+work/
+legacy/
+**/bin/
+**/obj/
+**/__pycache__/
+*.pyc
+**/.dotnet-home/
+**/.vs/
+**/.venv/
+*.user
+.env
+.env.*
+!.env.example
+
+# Published application and smoke-test artifacts
+outputs/SpirePilotApp/
+outputs/hybrid/mod/
+vendor/STS2MCP/out/
+vendor/STS2MCP/.dotnet-home/
+ui-*.png
+ui-smoke.json
+bridge-smoke.log
+startup.log
+startup-error.log
+crash.log
+preview-error.log
+
+# Controller runtime state (config.example.json is the tracked template)
+outputs/hybrid/config.json
+outputs/hybrid/runs/
+outputs/hybrid/smoke_test/
+outputs/hybrid/experience/
+outputs/hybrid/STOP
+outputs/hybrid/controller.lock
+outputs/hybrid/background.json
+outputs/hybrid/desktop_process.json
+outputs/hybrid/config.desktop.tmp
+
+# Legacy controller runtime files
+outputs/background*.log
+outputs/*.log
+outputs/*.err
+outputs/*.pid
+outputs/latest_state.json
+outputs/result.json
+outputs/run.jsonl
+outputs/STOP
+*.sqlite3
