@@ -30,9 +30,7 @@ docs/                    架构说明
 work/                    本机构建缓存和临时文件（不提交）
 ```
 
-对局日志、跨局经验数据库、本机配置和已发布应用都由 `.gitignore` 排除。`./build.ps1` 运行控制器测试并发布桌面应用；GitHub Actions 对 Python 测试和 WinUI 编译执行检查。Mod 依赖游戏程序集，未纳入在线 CI 编译。
-
-详细设计见 [控制器说明](outputs/hybrid/README.md)、[桌面端说明](outputs/SpirePilot/README.md)和[架构说明](docs/README.md)。首次推送参见 [发布步骤](docs/PUBLISHING.md)。本项目尚未以桌面版完成充分的整局实战验证，不能据此推断胜率或长期稳定性。
+详细设计见 [控制器说明](outputs/hybrid/README.md)、[桌面端说明](outputs/SpirePilot/README.md)和[架构说明](docs/README.md)。
 
 ## 许可证
 
