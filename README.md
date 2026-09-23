@@ -4,7 +4,7 @@ Spire Pilot 是《杀戮尖塔 2》的实验性双模型自动游玩项目。规
 
 ## 下载预览版
 
-从 [GitHub Releases](https://github.com/258369977/SpirePilot/releases) 下载 Windows x64 应用包、改版 STS2MCP Mod 包和 `SHA256SUMS.txt`。解压应用包后，保持 `SpirePilotApp/` 与 `hybrid/` 同级；`hybrid/python/` 已包含便携 Python，无需另行安装或配置。退出游戏并将 Mod 包中的 `STS2_MCP.dll` 与 `STS2_MCP.json` 放进游戏的 `mods/` 目录，启动游戏，再运行 `SpirePilotApp/SpirePilot.exe`。Mod 依赖游戏版本，更新游戏后需重新检查兼容性。
+从 [GitHub Releases](https://github.com/258369977/SpirePilot/releases) 下载 Windows x64 应用包、改版 STS2MCP Mod 包。解压应用包后，保持 `SpirePilotApp/` 与 `hybrid/` 同级。退出游戏并将 Mod 包中的 `STS2_MCP.dll` 与 `STS2_MCP.json` 放进游戏的 `mods/` 目录，启动游戏，再运行 `SpirePilotApp/SpirePilot.exe`。Mod 依赖游戏版本，更新游戏后需重新检查兼容性。
 
 ## 从源码运行
 
@@ -16,8 +16,7 @@ Spire Pilot 是《杀戮尖塔 2》的实验性双模型自动游玩项目。规
 ./outputs/SpirePilotApp/SpirePilot.exe
 ```
 
-在应用的“模型与设置”中分别填写规划模型和战斗模型的提供商、接口、模型 ID 与 API 密钥，然后保存设置。首次启动会读取 [配置模板](outputs/hybrid/config.example.json)；保存后生成本机 `outputs/hybrid/config.json`。密钥保存在当前 Windows 用户的凭据管理器，或者由 `SPIRE_PLANNER_KEY`、`SPIRE_COMBAT_KEY` 环境变量提供，不写入仓库。
-
+在应用的“模型与设置”中分别填写规划模型和战斗模型的提供商、接口、模型 ID 与 API 密钥，然后保存设置。首次启动会读取 [配置模板](outputs/hybrid/config.example.json)；保存后生成本机 `outputs/hybrid/config.json`。
 应用发布目录 `outputs/SpirePilotApp` 与控制器目录 `outputs/hybrid` 需保持同级。Mod 必须提供 `player.deck`；原版 STS2MCP 的构建不一定满足此要求。
 
 ## 目录
