@@ -1,4 +1,4 @@
-param([string]$Version = 'v0.1.0', [string]$OutputDirectory = '')
+param([string]$Version = 'v0.1.2', [string]$OutputDirectory = '', [string]$PythonArchive = '')
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -10,8 +10,16 @@ if (Test-Path -LiteralPath $release) { throw "Release directory already exists: 
 $appSource = Join-Path $root 'outputs\SpirePilotApp'
 $controllerSource = Join-Path $root 'outputs\hybrid'
 $modSource = Join-Path $controllerSource 'mod\STS2_MCP.dll'
+$pythonSource = if ($PythonArchive) { [IO.Path]::GetFullPath((Join-Path $root $PythonArchive)) } else { Join-Path $root 'work\python-embed\python-3.13.15-embed-amd64.zip' }
+$pythonHash = 'd1f04d990aee1253d8569e8e5104e30fa9f5fa830899f14843448872d936a2cf'
 foreach ($required in @((Join-Path $appSource 'SpirePilot.exe'), (Join-Path $controllerSource 'config.example.json'), $modSource)) {
     if (-not (Test-Path -LiteralPath $required)) { throw "Missing release input: $required" }
+}
+if (-not (Test-Path -LiteralPath $pythonSource)) {
+    throw "Missing official Python 3.13.15 embeddable package: $pythonSource (https://www.python.org/ftp/python/3.13.15/python-3.13.15-embed-amd64.zip)"
+}
+if ((Get-FileHash -LiteralPath $pythonSource -Algorithm SHA256).Hash.ToLowerInvariant() -ne $pythonHash) {
+    throw 'Python embeddable package checksum mismatch.'
 }
 
 $appStage = Join-Path $release 'app-stage\SpirePilot'
@@ -33,6 +41,11 @@ $controllerFiles = @('config.example.json', 'desktop_bridge.py', 'experience.py'
 foreach ($name in $controllerFiles) {
     Copy-Item -LiteralPath (Join-Path $controllerSource $name) -Destination $controllerTarget
 }
+$pythonTarget = Join-Path $controllerTarget 'python'
+Expand-Archive -LiteralPath $pythonSource -DestinationPath $pythonTarget
+$pythonPathFile = Join-Path $pythonTarget 'python313._pth'
+if (-not (Test-Path -LiteralPath $pythonPathFile)) { throw 'Python embeddable package lacks python313._pth.' }
+Add-Content -LiteralPath $pythonPathFile -Value '..' -Encoding ascii
 Copy-Item -LiteralPath (Join-Path $root 'LICENSE') -Destination $appStage
 Copy-Item -LiteralPath (Join-Path $root 'THIRD_PARTY_NOTICES.md') -Destination $appStage
 
@@ -43,10 +56,12 @@ Copy-Item -LiteralPath (Join-Path $root 'vendor\STS2MCP\LICENSE') -Destination $
 @'
 Spire Pilot Windows x64 preview
 
-Keep SpirePilotApp and hybrid in the same folder. Install Python 3.10+ and
-the matching STS2MCP-SpirePilot Mod, start Slay the Spire 2, then run
+Keep SpirePilotApp and hybrid in the same folder. Python 3.13.15 is included
+in hybrid\python and is selected automatically. Install the matching
+STS2MCP-SpirePilot Mod, start Slay the Spire 2, then run
 SpirePilotApp\SpirePilot.exe. Configure both providers and API keys in the app.
-The application contains .NET and Windows App SDK runtime files.
+The application contains .NET and Windows App SDK runtime files. Python is
+distributed under its license in hybrid\python\LICENSE.txt.
 Run data and API keys are not included. This preview has not completed a full
 end-to-end paid-model game validation.
 '@ | Set-Content -LiteralPath (Join-Path $appStage 'README.txt') -Encoding UTF8

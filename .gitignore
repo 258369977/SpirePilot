@@ -16,6 +16,7 @@ legacy/
 # Published application and smoke-test artifacts
 outputs/SpirePilotApp/
 outputs/hybrid/mod/
+outputs/hybrid/python/
 vendor/STS2MCP/out/
 vendor/STS2MCP/.dotnet-home/
 ui-*.png

@@ -1,7 +1,8 @@
 param([string]$RunDir = '')
 
 $ErrorActionPreference = 'Stop'
-$pythonExe = (Get-Command python -ErrorAction Stop).Source
+$bundledPython = Join-Path $PSScriptRoot 'python\python.exe'
+$pythonExe = if (Test-Path -LiteralPath $bundledPython) { $bundledPython } else { (Get-Command python -ErrorAction Stop).Source }
 $lockFile = Join-Path $PSScriptRoot 'controller.lock'
 $stopFile = Join-Path $PSScriptRoot 'STOP'
 $configPath = Join-Path $PSScriptRoot 'config.json'

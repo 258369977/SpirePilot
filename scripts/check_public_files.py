@@ -10,7 +10,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 FORBIDDEN_PREFIXES = (
     "work/", "legacy/", "outputs/SpirePilotApp/", "outputs/hybrid/runs/",
     "outputs/hybrid/experience/", "outputs/hybrid/smoke_test/",
-    "outputs/hybrid/mod/",
+    "outputs/hybrid/mod/", "outputs/hybrid/python/",
 )
 FORBIDDEN_FILES = {
     "outputs/hybrid/config.json", "outputs/hybrid/desktop_process.json",

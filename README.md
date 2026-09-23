@@ -4,7 +4,7 @@ Spire Pilot 是《杀戮尖塔 2》的实验性双模型自动游玩项目。规
 
 ## 下载预览版
 
-从 [GitHub Releases](https://github.com/258369977/SpirePilot/releases) 下载 Windows x64 应用包、改版 STS2MCP Mod 包和 `SHA256SUMS.txt`。解压应用包后，保持 `SpirePilotApp/` 与 `hybrid/` 同级；退出游戏并将 Mod 包中的 `STS2_MCP.dll` 与 `STS2_MCP.json` 放进游戏的 `mods/` 目录。安装 Python 3.10+，启动游戏，再运行 `SpirePilotApp/SpirePilot.exe`。Mod 依赖游戏版本，更新游戏后需重新检查兼容性。
+从 [GitHub Releases](https://github.com/258369977/SpirePilot/releases) 下载 Windows x64 应用包、改版 STS2MCP Mod 包和 `SHA256SUMS.txt`。解压应用包后，保持 `SpirePilotApp/` 与 `hybrid/` 同级；`hybrid/python/` 已包含便携 Python，无需另行安装或配置。退出游戏并将 Mod 包中的 `STS2_MCP.dll` 与 `STS2_MCP.json` 放进游戏的 `mods/` 目录，启动游戏，再运行 `SpirePilotApp/SpirePilot.exe`。Mod 依赖游戏版本，更新游戏后需重新检查兼容性。
 
 ## 从源码运行
 
@@ -30,7 +30,9 @@ docs/                    架构说明
 work/                    本机构建缓存和临时文件（不提交）
 ```
 
-详细设计见 [控制器说明](outputs/hybrid/README.md)、[桌面端说明](outputs/SpirePilot/README.md)和[架构说明](docs/README.md)。
+对局日志、跨局经验数据库、本机配置和已发布应用都由 `.gitignore` 排除。`./build.ps1` 运行控制器测试并发布桌面应用；GitHub Actions 对 Python 测试和 WinUI 编译执行检查。Mod 依赖游戏程序集，未纳入在线 CI 编译。
+
+详细设计见 [控制器说明](outputs/hybrid/README.md)、[桌面端说明](outputs/SpirePilot/README.md)和[架构说明](docs/README.md)。首次推送参见 [发布步骤](docs/PUBLISHING.md)。本项目尚未以桌面版完成充分的整局实战验证，不能据此推断胜率或长期稳定性。
 
 ## 许可证
 

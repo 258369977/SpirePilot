@@ -18,7 +18,7 @@ public sealed partial class MainWindow : Window
     readonly TextBlock status = Text("尚未连接", 15), character = Text("—", 28), floor = Text("—", 28), hp = Text("—", 28);
     readonly TextBlock plan = Text("开始对局后，这里会显示规划模型的构筑方向与战斗指导。", 15);
     readonly TextBox log = new() { IsReadOnly = true, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MinHeight = 230, MaxHeight = 340, FontFamily = new FontFamily("Cascadia Mono"), FontSize = 12 };
-    readonly TextBox rootInput = new() { Header = "控制器目录（hybrid）" }, pythonInput = new() { Header = "Python 可执行文件", Text = "python" };
+    readonly TextBox rootInput = new() { Header = "控制器目录（hybrid）" }, pythonInput = new() { Header = "Python（随包提供，可选覆盖）", Text = "python" };
     readonly ModelSettings plannerSettings = new(false), combatSettings = new(true);
     readonly TextBox scope = new() { Header = "记忆版本范围" };
     readonly ToggleSwitch memory = new() { Header = "跨局记忆", IsOn = true, OnContent = "启用复盘与经验检索", OffContent = "不读取和写入跨局经验" };
@@ -127,12 +127,14 @@ public sealed partial class MainWindow : Window
             Close();
             return;
         }
-        await Guard(async () => {
+        Func<Task> loadConfig = async () => {
             var c = await backend.Call("config");
             plannerSettings.Load(c, "planner"); combatSettings.Load(c, "combat");
             scope.Text = c["memory_scope"]?.ToString() ?? "local";
             memory.IsOn = c["cross_run_memory"]?.GetValue<bool>() ?? true;
-        });
+        };
+        if (Environment.GetCommandLineArgs().Contains("--smoke-test")) await loadConfig();
+        else await Guard(loadConfig);
         await Poll();
         if (Environment.GetCommandLineArgs().Contains("--smoke-test")) {
             var checkedPages = new JsonArray();
@@ -152,7 +154,7 @@ public sealed partial class MainWindow : Window
                 checkedPages.Add(new JsonObject { ["page"] = page, ["x"] = origin.X, ["width"] = width, ["window_width"] = shell.ActualWidth, ["scale"] = shell.XamlRoot.RasterizationScale });
             }
             await CapturePreview("ui-preview");
-            File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "ui-smoke.json"), new JsonObject { ["window"] = Title, ["theme"] = shell.ActualTheme.ToString(), ["backend_found"] = File.Exists(Path.Combine(backend.Root, "desktop_bridge.py")), ["pages"] = checkedPages }.ToJsonString());
+            File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "ui-smoke.json"), new JsonObject { ["window"] = Title, ["theme"] = shell.ActualTheme.ToString(), ["backend_found"] = File.Exists(Path.Combine(backend.Root, "desktop_bridge.py")), ["python_bundled"] = backend.Python.Equals(Path.Combine(backend.Root, "python", "python.exe"), StringComparison.OrdinalIgnoreCase), ["pages"] = checkedPages }.ToJsonString());
             Close();
         }
     }
@@ -165,9 +167,13 @@ public sealed partial class MainWindow : Window
             if (File.Exists(Path.Combine(candidate, "desktop_bridge.py"))) { backend.Root = candidate; break; }
             dir = dir.Parent;
         }
+        var configuredPython = "python";
         try {
-            if (File.Exists(settingsPath)) { var s = JsonNode.Parse(File.ReadAllText(settingsPath))!; backend.Root = s["root"]?.ToString() ?? backend.Root; backend.Python = s["python"]?.ToString() ?? "python"; }
+            if (File.Exists(settingsPath)) { var s = JsonNode.Parse(File.ReadAllText(settingsPath))!; backend.Root = s["root"]?.ToString() ?? backend.Root; configuredPython = s["python"]?.ToString() ?? "python"; }
         } catch { }
+        var bundledPython = Path.Combine(backend.Root, "python", "python.exe");
+        backend.Python = (string.IsNullOrWhiteSpace(configuredPython) || configuredPython.Equals("python", StringComparison.OrdinalIgnoreCase) || configuredPython.Equals("python.exe", StringComparison.OrdinalIgnoreCase)) && File.Exists(bundledPython)
+            ? bundledPython : configuredPython;
         rootInput.Text = backend.Root; pythonInput.Text = backend.Python;
     }
 

@@ -6,7 +6,7 @@
 
 ## 启动
 
-直接打开 `../SpirePilotApp/SpirePilot.exe`。发布目录已包含 .NET 和 Windows App SDK 运行文件，请保留整个目录，不要只复制 EXE。运行仍需要本机 Python 3.10+，控制器仅使用 Python 标准库。
+直接打开 `../SpirePilotApp/SpirePilot.exe`。发布目录已包含 .NET、Windows App SDK 和 Python 3.13.15 运行文件，请保留整个目录，不要只复制 EXE。应用会自动选择同级 `hybrid/python/python.exe`；只有从源码运行且没有便携运行时的情况下才需要系统 Python 3.10+。控制器仅使用 Python 标准库。
 
 目录结构保持为：
 
@@ -15,6 +15,7 @@ outputs/
   SpirePilotApp/SpirePilot.exe
   hybrid/desktop_bridge.py
   hybrid/config.example.json
+  hybrid/python/python.exe  # 发布包内置，自动选择
   hybrid/config.json  # 首次保存设置后在本机生成
 ```
 
@@ -31,7 +32,7 @@ outputs/
 ## 页面
 
 - 对局控制台：启动、停止、连接检查、当前计划与日志。
-- 模型与设置：两组提供商、接口类型、模型 ID、密钥、跨局记忆开关、版本隔离标签、控制器路径和 Python 路径。
+- 模型与设置：两组提供商、接口类型、模型 ID、密钥、跨局记忆开关、版本隔离标签、控制器路径和可选的 Python 路径覆盖。
 - 历史与复盘：恢复记录、查看复盘、对已结束的对局补跑复盘。
 - 跨局经验库：查看带来源与证据的经验。经验仍是模型提出的假设，不能视为已验证结论。
 
