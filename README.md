@@ -16,7 +16,7 @@ Spire Pilot 是《杀戮尖塔 2》的实验性双模型自动游玩项目。规
 ./outputs/SpirePilotApp/SpirePilot.exe
 ```
 
-在应用的“模型与设置”中分别填写规划模型和战斗模型的提供商、接口、模型 ID 与 API 密钥，然后保存设置。首次启动会读取 [配置模板](outputs/hybrid/config.example.json)；保存后生成本机 `outputs/hybrid/config.json`。
+在应用的“模型与设置”中分别填写规划模型和战斗模型的提供商、接口、模型 ID 与 API 密钥，然后保存设置。首次启动会读取 [配置模板](outputs/hybrid/config.example.json)；保存后生成本机 `outputs/hybrid/config.json`。密钥保存在当前 Windows 用户的凭据管理器，或者由 `SPIRE_PLANNER_KEY`、`SPIRE_COMBAT_KEY` 环境变量提供，不写入仓库。
 
 应用发布目录 `outputs/SpirePilotApp` 与控制器目录 `outputs/hybrid` 需保持同级。Mod 必须提供 `player.deck`；原版 STS2MCP 的构建不一定满足此要求。
 
@@ -29,6 +29,8 @@ vendor/STS2MCP/          改版 Mod 源码及其原始许可证
 docs/                    架构说明
 work/                    本机构建缓存和临时文件（不提交）
 ```
+
+对局日志、跨局经验数据库、本机配置和已发布应用都由 `.gitignore` 排除。`./build.ps1` 运行控制器测试并发布桌面应用；GitHub Actions 对 Python 测试和 WinUI 编译执行检查。Mod 依赖游戏程序集，未纳入在线 CI 编译。
 
 详细设计见 [控制器说明](outputs/hybrid/README.md)、[桌面端说明](outputs/SpirePilot/README.md)和[架构说明](docs/README.md)。首次推送参见 [发布步骤](docs/PUBLISHING.md)。本项目尚未以桌面版完成充分的整局实战验证，不能据此推断胜率或长期稳定性。
 

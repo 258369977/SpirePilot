@@ -87,7 +87,7 @@ class ExperienceTests(unittest.TestCase):
         row = {'kind': 'action', 'state': {'state_type': 'map', 'player': {'character': 'Ironclad', 'hp': 10}, 'run': {'floor': 9}},
                'action': {'action': 'choose_map_node', 'index': 0}, 'result': {'status': 'ok'}}
         (self.root / 'events.jsonl').write_text(json.dumps(row)+'\n', encoding='utf-8')
-        cfg = json.loads((pathlib.Path(__file__).parent / 'config.json').read_text(encoding='utf-8'))
+        cfg = json.loads((pathlib.Path(__file__).parent / 'config.example.json').read_text(encoding='utf-8'))
         cfg['experience_db'] = str(self.root / 'memory.sqlite3')
         return cfg
 

@@ -10,7 +10,7 @@ from unittest.mock import patch
 import game_actions
 from hybrid_player import Controller, PLAN_FIELDS, RetryableProviderError, atomic_json, role_for
 
-CONFIG = json.loads((pathlib.Path(__file__).parent / 'config.json').read_text(encoding='utf-8'))
+CONFIG = json.loads((pathlib.Path(__file__).parent / 'config.example.json').read_text(encoding='utf-8'))
 STATE = {'state_type': 'map', 'run': {'act': 1, 'floor': 4},
          'player': {'hp': 40, 'deck': [{'name': 'Strike'}]},
          'map': {'next_options': [{'index': 0, 'type': 'RestSite'}, {'index': 1, 'type': 'Elite'}]}}
